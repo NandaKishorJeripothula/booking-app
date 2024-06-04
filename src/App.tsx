@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import RegistraionForm from './RegistraionForm';
 import {
   DATA_TO_QUERY_KEYS,
   generateOptions,
+  getJsonFromUrl,
   jsonToQueryString,
 } from './utils';
 import { FailureResponse, SuccessResponse } from './types';
@@ -28,6 +29,7 @@ function App() {
   const [slot, setSlot] = useState<'30Min' | '60Min' | '90Min' | null>(null);
   const [formData, setFormData] = useState<Record<string, string> | null>(null);
   const [error, setError] = useState<FailureResponse | null>();
+  const [successPage, setSuccessPage] = useState<boolean>(false);
   const handleSuccessHandler = (data: SuccessResponse) => {
     const queryParams = {
       hide_gdpr_banner: 1,
@@ -80,9 +82,16 @@ function App() {
   const handle90MinCall = () => {
     setSlot('90Min');
   };
+
+  useEffect(() => {
+    const successData = getJsonFromUrl(location.href);
+    setSuccessPage(!!(Object.keys(successData).length > 2));
+  }, []);
   return (
     <div className="App">
-      {/* {slot ? (
+      {successPage ? (
+        <SuccessPage data={data} />
+      ) : slot ? (
         <RegistraionForm
           onSubmit={handleFormSubmit}
           onBackClick={() => setSlot(null)}
@@ -98,8 +107,7 @@ function App() {
             <button onClick={handle90MinCall}>90Min</button>
           </div>
         </>
-      )} */}
-      <SuccessPage data={data} />
+      )}
     </div>
   );
 }
