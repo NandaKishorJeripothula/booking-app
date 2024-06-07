@@ -36,3 +36,9 @@ export type RegistrationFormData = {
   email: string;
   mobile: string;
 };
+
+export type SlotConfiguration = {
+  mins: number;
+  displayPrice: string;
+  amoutInPaisa: number;
+};

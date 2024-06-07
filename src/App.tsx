@@ -7,9 +7,27 @@ import {
   getJsonFromUrl,
   jsonToQueryString,
 } from './utils';
-import { FailureResponse, SuccessResponse } from './types';
+import { FailureResponse, SlotConfiguration, SuccessResponse } from './types';
 import SuccessPage from './SuccessPage';
+import BookingSection from './BookingSection';
 
+const slotConfigurations: SlotConfiguration[] = [
+  {
+    mins: 5,
+    displayPrice: '₹60',
+    amoutInPaisa: 60 * 100,
+  },
+  {
+    mins: 10,
+    displayPrice: '₹110',
+    amoutInPaisa: 110 * 100,
+  },
+  {
+    mins: 15,
+    displayPrice: '₹150',
+    amoutInPaisa: 150 * 100,
+  },
+];
 const data = {
   assigned_to: 'Sender',
   event_type_uuid: 'e2f3c774-bf63-4b97-ae8d-f1281aed5bff',
@@ -26,7 +44,7 @@ const data = {
 };
 
 function App() {
-  const [slot, setSlot] = useState<'30Min' | '60Min' | '90Min' | null>(null);
+  const [slot, setSlot] = useState<SlotConfiguration | null>(null);
   const [formData, setFormData] = useState<Record<string, string> | null>(null);
   const [error, setError] = useState<FailureResponse | null>();
   const [successPage, setSuccessPage] = useState<boolean>(false);
@@ -50,7 +68,6 @@ function App() {
   const handleFailureHandler = (data: FailureResponse) => {
     console.log(data);
     setError(data);
-
     setSlot(null);
   };
   const openCheckout = (options: Record<string, unknown>) => {
@@ -60,12 +77,15 @@ function App() {
   };
 
   const handleFormSubmit = (data: Record<string, string>) => {
+    if (!slot) {
+      return;
+    }
     setError(null);
     const { email, mobile, name } = data;
     setFormData(data);
-    const amount = slot === '30Min' ? 1 : slot === '60Min' ? 2 : 3;
+
     const options = generateOptions(
-      amount,
+      slot?.amoutInPaisa,
       handleSuccessHandler,
       email,
       name,
@@ -73,14 +93,9 @@ function App() {
     );
     openCheckout(options);
   };
-  const handle30MinCall = () => {
-    setSlot('30Min');
-  };
-  const handle60MinCall = () => {
-    setSlot('60Min');
-  };
-  const handle90MinCall = () => {
-    setSlot('90Min');
+
+  const handleBooking = (data: SlotConfiguration) => {
+    setSlot(data);
   };
 
   useEffect(() => {
@@ -98,14 +113,8 @@ function App() {
         />
       ) : (
         <>
-          <div className="booking-error">
-            {error ? JSON.stringify(error) : ''}
-          </div>
-          <div className="button-group">
-            <button onClick={handle30MinCall}>30Min</button>
-            <button onClick={handle60MinCall}>60Min</button>
-            <button onClick={handle90MinCall}>90Min</button>
-          </div>
+          <div className="booking-error">{error?.error?.description}</div>
+          <BookingSection onClick={handleBooking} slots={slotConfigurations} />
         </>
       )}
     </div>

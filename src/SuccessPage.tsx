@@ -30,14 +30,14 @@ const SuccessPage = ({ data }: { data: InviteData }) => {
 
   return (
     <div className="success-container">
-      <span className="success-icon">✔️</span>
+      <span className="checkmark" />
       <div className="success-header">
-        <h2>You slot booked succesfully!</h2>
+        <h2>Booking succesful!</h2>
       </div>
       <p>A calendar invitation has been sent to your email address.</p>
       <div className="success-details">
-        <h3>{event_type_name}</h3>
         <div className="detail-item">
+          {/* <h3>{event_type_name}</h3> */}
           <span className="icon">👤</span>
           <span>{invitee_full_name}</span>
         </div>

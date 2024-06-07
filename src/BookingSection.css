@@ -1,0 +1,62 @@
+.booking-section {
+  text-align: center;
+}
+
+.booking-section h1 {
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: var(--primary-color);
+}
+
+.booking-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.booking-option {
+  background-color: var(--white);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  max-width: 75%;
+  text-align: center;
+}
+
+.booking-option h2 {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+}
+
+.booking-option p {
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+.booking-option button {
+  background-color: var(--primary-color);
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 5px;
+  color: var(--secondary-color);
+}
+
+.booking-option:hover {
+  box-shadow: 10px 10px 10px rgba(230, 226, 226, 0.1);
+}
+
+.booking-option button:hover {
+  background-color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .booking-options {
+    flex-direction: column;
+    align-items: center;
+  }
+}

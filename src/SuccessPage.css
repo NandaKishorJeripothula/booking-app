@@ -1,53 +1,62 @@
-/* SuccessPage.css */
 .success-container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .success-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .success-icon {
-    font-size: 2em;
-    color: green;
-    margin-right: 10px;
-  }
-  
-  .success-details {
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 20px;
-    background-color: #fff;
-    text-align: left;
-  }
-  
-  .detail-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .icon {
-    margin-right: 10px;
-    font-size: 1.2em;
-    color: #555;
-  }
-  
-  h2, h3 {
-    color: #333;
-  }
-  
-  p {
-    color: #666;
-  }
-  
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: var(--white);
+}
+
+.success-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.success-icon {
+  font-size: 2em;
+  color: green;
+  margin-right: 10px;
+}
+p,
+.success-icon {
+  color: var(--primary-color);
+}
+
+.success-details {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  text-align: left;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: #555;
+}
+
+p {
+  color: #666;
+}
+
+.checkmark {
+  display: inline-block;
+  transform: rotate(45deg);
+  height: 25px;
+  width: 12px;
+  border-bottom: 7px solid var(--primary-color);
+  border-right: 7px solid var(--primary-color);
+}
