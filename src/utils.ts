@@ -33,31 +33,41 @@ export const generateOptions = (
   email: string,
   name: string,
   contact: string,
-) => ({
-  // redirect: true,
-  key: 'rzp_test_0wFRWIZnH65uny', // Enter the Key ID generated from the Dashboard
-  amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-  currency: 'INR',
-  name: 'Acme Corp', //your business name
-  description: 'Test Transaction',
-  image: 'https://example.com/your_logo',
-  handler,
-  // callback_url:
-  //   'https://calendly.com/telugutarots/30min?hide_gdpr_banner=1&hide_landing_page_details=1&hide_event_type_details=1',
-  prefill: {
-    //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-    name, //your customer's name
-    email,
-    contact,
-  },
-  retry: false,
-  notes: {
-    category: `${amount}-11223`,
-  },
-  theme: {
-    color: '#3399cc',
-  },
-});
+) => {
+  const style = getComputedStyle(document.body);
+
+  const primaryColor = style.getPropertyValue('--primary-color');
+  const secondaryColor = style.getPropertyValue('--secondary-color');
+  return {
+    // redirect: true,
+    key: 'rzp_test_0wFRWIZnH65uny', // Enter the Key ID generated from the Dashboard
+    amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    currency: 'INR',
+    name: 'Acme Corp', //your business name
+    description: 'Test Transaction',
+    image: 'https://example.com/your_logo',
+    handler,
+    // callback_url:
+    //   'https://calendly.com/telugutarots/30min?hide_gdpr_banner=1&hide_landing_page_details=1&hide_event_type_details=1',
+    prefill: {
+      //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+      name, //your customer's name
+      email,
+      contact,
+    },
+    retry: false,
+    notes: {
+      category: `${amount}-11223`,
+    },
+    theme: {
+      color: primaryColor,
+      ctaColor: primaryColor,
+      ctaTextColor: secondaryColor,
+      backgroundColor: secondaryColor,
+      foregroundColor: primaryColor,
+    },
+  };
+};
 
 export const DATA_TO_QUERY_KEYS = {
   content: 'a1',
