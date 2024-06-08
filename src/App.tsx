@@ -1,91 +1,95 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 import RegistraionForm from './RegistraionForm';
+import { generateOptions } from './utils';
 import {
-  DATA_TO_QUERY_KEYS,
-  generateOptions,
-  getJsonFromUrl,
-  jsonToQueryString,
-} from './utils';
-import { FailureResponse, SlotConfiguration, SuccessResponse } from './types';
+  FailureResponse,
+  RegistrationFormData,
+  SlotConfiguration,
+  SuccessResponse,
+} from './types';
 import SuccessPage from './SuccessPage';
 import BookingSection from './BookingSection';
+import { SCHEDULAR_URL, SLOT_CONFIFGURATIONS } from './constants';
+import Scheduler from './Scheduler';
 
-const slotConfigurations: SlotConfiguration[] = [
-  {
-    mins: 5,
-    displayPrice: '₹60',
-    amoutInPaisa: 60 * 100,
-  },
-  {
-    mins: 10,
-    displayPrice: '₹110',
-    amoutInPaisa: 110 * 100,
-  },
-  {
-    mins: 15,
-    displayPrice: '₹150',
-    amoutInPaisa: 150 * 100,
-  },
-];
-const data = {
-  assigned_to: 'Sender',
-  event_type_uuid: 'e2f3c774-bf63-4b97-ae8d-f1281aed5bff',
-  event_type_name: '30 Minute Meeting',
-  event_start_time: '2024-06-05T10:00:00+05:30',
-  event_end_time: '2024-06-05T10:30:00+05:30',
-  invitee_uuid: 'ccb3f253-9eba-47a8-b788-5f0cb603230c',
-  invitee_full_name: 'testfullname',
-  invitee_email: 'test@test.com',
-  answer_1: 'contact: testcontact',
-  utm_campaign: '30Min',
-  utm_source: 'booking-page',
-  utm_content: 'test-payment-id',
+// const data = {
+//   assigned_to: 'Sender',
+//   event_type_uuid: 'e2f3c774-bf63-4b97-ae8d-f1281aed5bff',
+//   event_type_name: '30 Minute Meeting',
+//   event_start_time: '2024-06-05T10:00:00+05:30',
+//   event_end_time: '2024-06-05T10:30:00+05:30',
+//   invitee_uuid: 'ccb3f253-9eba-47a8-b788-5f0cb603230c',
+//   invitee_full_name: 'testfullname',
+//   invitee_email: 'test@test.com',
+//   answer_1: 'contact: testcontact',
+//   utm_campaign: '30Min',
+//   utm_source: 'booking-page',
+//   utm_content: 'test-payment-id',
+// };
+type TViewData = {
+  slots: {
+    selectedSlot: SlotConfiguration;
+  };
+  form: {
+    data: RegistrationFormData;
+    payment: {
+      error: FailureResponse;
+      success: SuccessResponse;
+    };
+  };
+  scheduler: {};
+  event: {};
 };
+type TView = keyof TViewData;
+type ValueOf<T> = T[keyof T];
 
 function App() {
-  const [slot, setSlot] = useState<SlotConfiguration | null>(null);
-  const [formData, setFormData] = useState<Record<string, string> | null>(null);
-  const [error, setError] = useState<FailureResponse | null>();
-  const [successPage, setSuccessPage] = useState<boolean>(false);
+  const [viewData, setViewData] = useState<TViewData>({} as TViewData);
+  const [view, setView] = useState<TView>(() => 'scheduler');
+
+  const updateViewData = (view: TView, data: ValueOf<TViewData>) => {
+    setViewData((previousData) => ({
+      ...previousData,
+      [view]: {
+        ...(previousData[view] || {}),
+        ...(data || {}),
+      },
+    }));
+  };
   const handleSuccessHandler = (data: SuccessResponse) => {
-    const queryParams = {
-      hide_gdpr_banner: 1,
-      hide_landing_page_details: 1,
-      hide_event_type_details: 1,
-      email: formData?.email,
-      name: formData?.name,
-      [DATA_TO_QUERY_KEYS.content]: `contact: ${formData?.mobile}`,
-      [DATA_TO_QUERY_KEYS.paymentId]: data.razorpay_payment_id,
-      [DATA_TO_QUERY_KEYS.slot]: slot,
-      [DATA_TO_QUERY_KEYS.source]: 'booking-page',
-    };
-    setSlot(null);
-    const queryString = jsonToQueryString(queryParams);
-    const url = `https://calendly.com/telugutarots/30min?${queryString}`;
-    location.href = url;
+    updateViewData('form', {
+      payment: {
+        success: data,
+      },
+    });
+    setView('scheduler');
   };
+
   const handleFailureHandler = (data: FailureResponse) => {
-    console.log(data);
-    setError(data);
-    setSlot(null);
-  };
-  const openCheckout = (options: Record<string, unknown>) => {
-    const razorpayInstance = new Razorpay(options);
-    razorpayInstance.open();
-    razorpayInstance.on('payment.failed', handleFailureHandler);
+    updateViewData('form', {
+      payment: {
+        error: data,
+      },
+    });
+    setView('slots');
   };
 
   const handleFormSubmit = (data: Record<string, string>) => {
-    if (!slot) {
+    if (!viewData?.slots?.selectedSlot) {
       return;
     }
-    setError(null);
-    const { email, mobile, name } = data;
-    setFormData(data);
+    updateViewData('form', {
+      data,
+      payment: {
+        error: null,
+        success: null,
+      },
+    });
 
+    const { email, mobile, name } = data;
     const options = generateOptions(
-      slot?.amoutInPaisa,
+      viewData?.slots?.selectedSlot?.amoutInPaisa,
       handleSuccessHandler,
       email,
       name,
@@ -94,28 +98,68 @@ function App() {
     openCheckout(options);
   };
 
-  const handleBooking = (data: SlotConfiguration) => {
-    setSlot(data);
+  const handleScheduleSuccess = () => {
+    setView('event');
   };
 
-  useEffect(() => {
-    const successData = getJsonFromUrl(location.href);
-    setSuccessPage(!!(Object.keys(successData).length > 2));
-  }, []);
+  const handleBooking = (data: SlotConfiguration) => {
+    updateViewData('slots', {
+      selectedSlot: data,
+    });
+    setView('form');
+  };
+
+  const handleFormBack = () => {
+    updateViewData('slots', {
+      selectedSlot: null,
+    });
+    setView('slots');
+  };
+
+  const openCheckout = (options: Record<string, unknown>) => {
+    const razorpayInstance = new Razorpay(options);
+    razorpayInstance.open();
+    razorpayInstance.on('payment.failed', handleFailureHandler);
+  };
+
   return (
     <div className="App">
-      {successPage ? (
-        <SuccessPage data={data} />
-      ) : slot ? (
+      {view === 'slots' ? (
+        <>
+          <div className="booking-error">
+            {viewData?.form?.payment.error?.error?.description}
+          </div>
+          <BookingSection
+            onClick={handleBooking}
+            slots={SLOT_CONFIFGURATIONS}
+          />
+        </>
+      ) : view === 'form' ? (
         <RegistraionForm
           onSubmit={handleFormSubmit}
-          onBackClick={() => setSlot(null)}
+          onBackClick={handleFormBack}
+        />
+      ) : view === 'scheduler' ? (
+        <Scheduler
+          url={SCHEDULAR_URL}
+          inputPayload={{
+            ...(viewData?.form?.data || {}),
+            paymentId: viewData?.form?.payment?.success?.razorpay_payment_id,
+            slot: viewData?.slots?.selectedSlot?.mins as unknown as string,
+            source: 'Website|Booking Section',
+          }}
+          onScheduleSuccess={handleScheduleSuccess}
+        />
+      ) : view === 'event' ? (
+        <SuccessPage
+          data={{
+            eventEndTime: '',
+            eventStartTime: '',
+            inviteeName: viewData?.form?.data.name,
+          }}
         />
       ) : (
-        <>
-          <div className="booking-error">{error?.error?.description}</div>
-          <BookingSection onClick={handleBooking} slots={slotConfigurations} />
-        </>
+        <h4>Reload The page</h4>
       )}
     </div>
   );

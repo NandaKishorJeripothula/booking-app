@@ -27,6 +27,18 @@ export function getJsonFromUrl(url: string) {
   });
   return result;
 }
+
+export const getThemeColors = () => {
+  const style = getComputedStyle(document.body);
+  const primaryColor = style.getPropertyValue('--primary-color');
+  const secondaryColor = style.getPropertyValue('--secondary-color');
+  const tertiaryColor = style.getPropertyValue('--tertiary-color');
+  const textColor = style.getPropertyValue('--text-color');
+  const whiteColor = style.getPropertyValue('--white');
+
+  return { primaryColor, secondaryColor, tertiaryColor, textColor, whiteColor };
+};
+
 export const generateOptions = (
   amount: number,
   handler: (data: SuccessResponse) => void,
@@ -34,10 +46,7 @@ export const generateOptions = (
   name: string,
   contact: string,
 ) => {
-  const style = getComputedStyle(document.body);
-
-  const primaryColor = style.getPropertyValue('--primary-color');
-  const secondaryColor = style.getPropertyValue('--secondary-color');
+  const { primaryColor, secondaryColor } = getThemeColors();
   return {
     // redirect: true,
     key: 'rzp_test_0wFRWIZnH65uny', // Enter the Key ID generated from the Dashboard
@@ -67,11 +76,4 @@ export const generateOptions = (
       foregroundColor: primaryColor,
     },
   };
-};
-
-export const DATA_TO_QUERY_KEYS = {
-  content: 'a1',
-  slot: 'utm_campaign',
-  source: 'utm_source',
-  paymentId: 'utm_content',
 };

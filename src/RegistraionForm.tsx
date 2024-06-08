@@ -118,51 +118,6 @@ const RegistraionForm = ({
       </form>
     </section>
   );
-
-  return (
-    <>
-      <form>
-        <div>Hey this is info</div>
-        <div className="booking-options">
-          <div className="form-group">
-            <label>
-              Name:
-              <input type="text" name="name" />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              Email:
-              <input type="email" name="email" />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              Mobile:
-              <input type="text" name="mobile" />
-            </label>
-          </div>
-        </div>
-
-        <div className="button-group booking-options">
-          <div className="booking-option">
-            <button
-              type="button"
-              className="other-button "
-              onClick={onBackClick}
-            >
-              Back to Slots
-            </button>
-          </div>
-          <div className="booking-option">
-            <button type="submit" className="submit-button">
-              Submit
-            </button>
-          </div>
-        </div>
-      </form>
-    </>
-  );
 };
 
 export default RegistraionForm;

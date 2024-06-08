@@ -3,12 +3,7 @@ import './SuccessPage.css'; // Import the CSS file
 import { InviteData } from './types';
 
 const SuccessPage = ({ data }: { data: InviteData }) => {
-  const {
-    event_type_name,
-    event_start_time,
-    event_end_time,
-    invitee_full_name,
-  } = data;
+  const { eventStartTime, eventEndTime, inviteeName } = data;
 
   const formatTime = (isoString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -22,8 +17,8 @@ const SuccessPage = ({ data }: { data: InviteData }) => {
     return new Date(isoString).toLocaleString('en-IN', options);
   };
 
-  const startTime = formatTime(event_start_time);
-  const endTime = new Date(event_end_time).toLocaleTimeString('en-IN', {
+  const startTime = formatTime(eventStartTime);
+  const endTime = new Date(eventEndTime).toLocaleTimeString('en-IN', {
     hour: '2-digit',
     minute: '2-digit',
   });
@@ -39,7 +34,7 @@ const SuccessPage = ({ data }: { data: InviteData }) => {
         <div className="detail-item">
           {/* <h3>{event_type_name}</h3> */}
           <span className="icon">👤</span>
-          <span>{invitee_full_name}</span>
+          <span>{inviteeName}</span>
         </div>
         <div className="detail-item">
           <span className="icon">📅</span>
