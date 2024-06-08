@@ -4,49 +4,20 @@ import RegistraionForm from './RegistraionForm';
 import { generateOptions } from './utils';
 import {
   FailureResponse,
-  RegistrationFormData,
   SlotConfiguration,
   SuccessResponse,
+  TView,
+  TViewData,
+  ValueOf,
 } from './types';
 import SuccessPage from './SuccessPage';
 import BookingSection from './BookingSection';
 import { SCHEDULAR_URL, SLOT_CONFIFGURATIONS } from './constants';
 import Scheduler from './Scheduler';
 
-// const data = {
-//   assigned_to: 'Sender',
-//   event_type_uuid: 'e2f3c774-bf63-4b97-ae8d-f1281aed5bff',
-//   event_type_name: '30 Minute Meeting',
-//   event_start_time: '2024-06-05T10:00:00+05:30',
-//   event_end_time: '2024-06-05T10:30:00+05:30',
-//   invitee_uuid: 'ccb3f253-9eba-47a8-b788-5f0cb603230c',
-//   invitee_full_name: 'testfullname',
-//   invitee_email: 'test@test.com',
-//   answer_1: 'contact: testcontact',
-//   utm_campaign: '30Min',
-//   utm_source: 'booking-page',
-//   utm_content: 'test-payment-id',
-// };
-type TViewData = {
-  slots: {
-    selectedSlot: SlotConfiguration;
-  };
-  form: {
-    data: RegistrationFormData;
-    payment: {
-      error: FailureResponse;
-      success: SuccessResponse;
-    };
-  };
-  scheduler: {};
-  event: {};
-};
-type TView = keyof TViewData;
-type ValueOf<T> = T[keyof T];
-
 function App() {
   const [viewData, setViewData] = useState<TViewData>({} as TViewData);
-  const [view, setView] = useState<TView>(() => 'scheduler');
+  const [view, setView] = useState<TView>(() => 'slots');
 
   const updateViewData = (view: TView, data: ValueOf<TViewData>) => {
     setViewData((previousData) => ({
@@ -153,9 +124,8 @@ function App() {
       ) : view === 'event' ? (
         <SuccessPage
           data={{
-            eventEndTime: '',
-            eventStartTime: '',
-            inviteeName: viewData?.form?.data.name,
+            details: viewData?.form?.data,
+            slot: viewData?.slots?.selectedSlot,
           }}
         />
       ) : (

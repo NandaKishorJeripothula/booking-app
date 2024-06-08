@@ -10,6 +10,11 @@
   margin-bottom: 20px;
 }
 
+.form-section h4 {
+  font-size: 1em;
+  margin: 10px 0px;
+}
+
 .booking-form {
   display: flex;
   flex-direction: row;
@@ -29,7 +34,7 @@
 
 .form-field p {
   margin: 5px 0px 10px 0px;
-  height: 10px;
+  height: auto;
 }
 
 .form-field input {
@@ -37,6 +42,22 @@
   border: 1px solid var(--primary-color);
   border-radius: 4px;
   color: var(--white);
+}
+
+.form-field input[type='checkbox'] {
+  width: 1.5em;
+  height: 1.5em;
+  accent-color: var(--primary-color);
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  text-align: left;
 }
 
 .form-buttons {

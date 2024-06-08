@@ -3,6 +3,7 @@ import './RegistraionForm.css'; // Import the CSS file
 
 import './BookingSection.css';
 import { RegistrationFormData } from './types';
+import { PRIVACY_NOTICE_TNC } from './constants';
 
 const RegistraionForm = ({
   onSubmit,
@@ -15,19 +16,21 @@ const RegistraionForm = ({
     name: '',
     email: '',
     mobile: '',
+    privacyNotice: '',
   });
 
   const [errors, setErrors] = useState<RegistrationFormData>({
     name: '',
     email: '',
     mobile: '',
+    privacyNotice: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, checked, type } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === 'checkbox' ? (checked ? 'agreed' : '') : value,
     });
   };
 
@@ -38,6 +41,10 @@ const RegistraionForm = ({
     // Name validation
     if (!formData.name) {
       newErrors.name = 'Name is required';
+      isValid = false;
+    }
+    if (!formData.privacyNotice) {
+      newErrors.privacyNotice = 'Please accept the terms & conditions';
       isValid = false;
     }
 
@@ -70,6 +77,7 @@ const RegistraionForm = ({
   return (
     <section className="form-section">
       <h1>Booking Form</h1>
+      <h4>Please help us with the following information to schedule invite</h4>
       <form onSubmit={handleSubmit}>
         <div className="booking-form">
           <div className="form-field">
@@ -107,6 +115,20 @@ const RegistraionForm = ({
             <p className="error">{errors.mobile}</p>
           </div>
         </div>
+        <div className="form-field">
+          <label htmlFor="privacyNotice" className="checkboxLabel">
+            <input
+              type="checkbox"
+              id="privacyNotice"
+              name="privacyNotice"
+              value={formData.mobile}
+              onChange={handleChange}
+            />
+            <p>{PRIVACY_NOTICE_TNC}</p>
+          </label>
+          <p className="error">{errors.privacyNotice}</p>
+        </div>
+
         <div className="form-buttons booking-form">
           <button type="button" className="btn-back" onClick={onBackClick}>
             Back

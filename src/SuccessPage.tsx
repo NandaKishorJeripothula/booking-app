@@ -3,25 +3,7 @@ import './SuccessPage.css'; // Import the CSS file
 import { InviteData } from './types';
 
 const SuccessPage = ({ data }: { data: InviteData }) => {
-  const { eventStartTime, eventEndTime, inviteeName } = data;
-
-  const formatTime = (isoString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      hour: '2-digit',
-      minute: '2-digit',
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    };
-    return new Date(isoString).toLocaleString('en-IN', options);
-  };
-
-  const startTime = formatTime(eventStartTime);
-  const endTime = new Date(eventEndTime).toLocaleTimeString('en-IN', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const { details, slot } = data;
 
   return (
     <div className="success-container">
@@ -34,19 +16,19 @@ const SuccessPage = ({ data }: { data: InviteData }) => {
         <div className="detail-item">
           {/* <h3>{event_type_name}</h3> */}
           <span className="icon">👤</span>
-          <span>{inviteeName}</span>
+          <span>{details.name}</span>
         </div>
         <div className="detail-item">
-          <span className="icon">📅</span>
-          <span>{`${startTime} - ${endTime}`}</span>
+          <span className="icon">📩</span>
+          <span>{details.email}</span>
         </div>
         <div className="detail-item">
-          <span className="icon">🌐</span>
-          <span>India Standard Time</span>
+          <span className="icon">📞</span>
+          <span>{details.mobile}</span>
         </div>
         <div className="detail-item">
-          <span className="icon">💻</span>
-          <span>Web conferencing details to follow.</span>
+          <span className="icon">⏱️</span>
+          <span>{`${slot.mins} minutes`}</span>
         </div>
       </div>
     </div>

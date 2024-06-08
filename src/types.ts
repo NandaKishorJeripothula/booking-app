@@ -18,26 +18,15 @@ export type FailureResponse = {
 };
 
 export interface InviteData {
-  // event_type_uuid: string;
-  // event_type_name: string;
-  // event_start_time: string;
-  // event_end_time: string;
-  // invitee_uuid: string;
-  // invitee_full_name: string;
-  // invitee_email: string;
-  // answer_1: string;
-  // utm_campaign: string;
-  // utm_source: string;
-  // utm_content: string;
-  eventStartTime: string;
-  eventEndTime: string;
-  inviteeName: string;
+  slot: SlotConfiguration;
+  details: RegistrationFormData;
 }
 
 export type RegistrationFormData = {
   name: string;
   email: string;
   mobile: string;
+  privacyNotice: string;
 };
 
 export type SlotConfiguration = {
@@ -45,3 +34,20 @@ export type SlotConfiguration = {
   displayPrice: string;
   amoutInPaisa: number;
 };
+
+export type TViewData = {
+  slots: {
+    selectedSlot: SlotConfiguration;
+  };
+  form: {
+    data: RegistrationFormData;
+    payment: {
+      error: FailureResponse;
+      success: SuccessResponse;
+    };
+  };
+  scheduler: {};
+  event: {};
+};
+export type TView = keyof TViewData;
+export type ValueOf<T> = T[keyof T];

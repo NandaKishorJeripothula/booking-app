@@ -19,3 +19,5 @@ export const SLOT_CONFIFGURATIONS: SlotConfiguration[] = [
 ];
 
 export const SCHEDULAR_URL = 'https://calendly.com/telugutarots/30min';
+
+export const PRIVACY_NOTICE_TNC = `By providing your email and mobile number, you consent to receive communications from us regarding updates and important notifications related to our services.Your contact information will be securely stored and will not be shared with third parties without your explicit consent.`;
